@@ -6,3 +6,5 @@ const config = {
 	WS_PORT: 5051,
 
 }
+
+module.exports = config;
