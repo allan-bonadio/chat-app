@@ -5,7 +5,6 @@
 let config = require('./src/config.js');
 let fs = require('fs');
 
-
 fs.writeFile('chat-app.pid', process.pid, err => {
 		if (err)
 			console.error(err);
@@ -33,6 +32,7 @@ const sockServer = new WebSocket.Server({
 });
 console.log("socket created");
 
+// send any message to any client (one at a time)
 function sendMessage(ws, msgTree) {
 	if (ws.readyState !== WebSocket.OPEN) {
 		// it closed on us.  Just forget it.  
@@ -49,11 +49,12 @@ function sendMessage(ws, msgTree) {
 	}
 }
 
+// send the allHistory command to one client, with the complete history
 function sendHistory(ws) {
 	sendMessage(ws, {what: 'allHistory', history});
 }
 
-
+// receive connection, do preliminaries, and set up important handlers
 sockServer.on('connection', ws => {
 	console.log("connection made from client");
 	
@@ -82,21 +83,7 @@ sockServer.on('connection', ws => {
 console.log("Now listening on ws://localhost:"+ config.WS_PORT);
 
 
-/* ***************************************************** http server */
-
-// 
-// const express = require('express')
-// const app = express()
-// 
-// app.use('/', express.static('public', {fallthrough: false}));
-// 
-// app.listen(config.HTTP_PORT);
-// console.log("Now listening on http://localhost:"+ config.HTTP_PORT);
-// 
-
 /* ***************************************************** chat action */
-
-
 
 // one of our clients sent in a message that they typed.	
 // Add it to the list and tell everybody.
@@ -109,20 +96,17 @@ function newIncomingChatMessage(connectedAs, text) {
 	chattingUsers.forEach(user => sendHistory(user.ws));
 }
 
-
-
+// handle any msg from the client from the ws
 function commandFromClient(payload, ws) {
 
 	switch (payload.what) {
 	case 'connectedAs':
+		let connectedas, connectedAs = payload.connectedAs;
+
 		// make sure the name is unique, case insens.  
 		// If not, add a digit at the end.  note connectedas is case folded.
-		let connectedas, connectedAs = payload.connectedAs;
-		if (typeof connectedAs != 'string') debugger;////
-
 		for (;;) {
 			connectedas = connectedAs.toLowerCase();
-			if (typeof connectedas != 'string') debugger;////
 			let another = chattingUsers.find(u => u.connectedas == connectedas);
 			if (! another)
 				break;
@@ -131,12 +115,10 @@ function commandFromClient(payload, ws) {
 			if (! / (\d+)$/.test(connectedAs))
 				connectedAs += ' ';
 			connectedAs += Math.floor(Math.random() * 10);
-			if (typeof connectedAs != 'string') debugger;////
 		}
 		
 		// store also the casefolded name to make the loop above more practical
 		chattingUsers.push({connectedAs, connectedas, ws})
-		if (typeof connectedAs != 'string') debugger;////
 		break;
 	
 	case 'post':

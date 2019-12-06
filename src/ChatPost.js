@@ -9,9 +9,6 @@ import React from 'react';
 class ChatPost extends React.Component {
 
 	render() {
-		////debugger;////
-		if (typeof this.props.connectedAs != 'string') debugger;////
-		//if (typeof this.props.post.connectedAs != 'string') debugger;////
 		let p = this.props.post;
 		let whichSide, leftName, rightName;
 		if (p.connectedAs == this.props.connectedAs) {

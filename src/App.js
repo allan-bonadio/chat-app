@@ -6,7 +6,6 @@ import React from 'react';
 import './App.css';
 import ChatPanel from './ChatPanel';
 import HeaderPanel from './HeaderPanel';
-//import config from './config';
 import clientConnection from './clientConnection';
 
 class App extends React.Component {
@@ -17,19 +16,15 @@ class App extends React.Component {
 		this.state = {
 			// this is false if not connected, or the user name if connected
 			connectedAs: '',
+			
+			// all the posts, in chron order
 			history: [],
 		};
 		
 		this.initiateConnect = this.initiateConnect.bind(this);
 	}
-	
-	componentDidMount() {
-		//debugger;
-	}
 
 	render() {
-		if (typeof this.state.connectedAs != 'string') debugger;
-
 		return (
 			<div className="App">
 				<HeaderPanel connectedAs={this.state.connectedAs} 
@@ -51,7 +46,6 @@ class App extends React.Component {
 	// called when user clicks Connect button
 	initiateConnect(connectedAs) {
 		this.setState({connectedAs});
-		if (typeof connectedAs != 'string') debugger;////
 		
 		// now open up the socket to the server
 		try {

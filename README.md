@@ -1,4 +1,13 @@
+# Chat App
+A simple application demonstrating chat.
 
+## How to Run
+
+npm start
+
+This starts the server and the react server.  Surf to localhost:3000 or whateveripaddres:3000 .  Enter your name and then start typing messages.  It's a big party line so everybody's posts are all in one conversation.
+
+Surf to localhost:3000 again from another browser window (or another browser, or another machine).  Enter a different name.  You can now conduct a conversation.
 
 ## Design Decisions
 

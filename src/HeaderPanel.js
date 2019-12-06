@@ -36,7 +36,7 @@ class HeaderPanel extends React.Component {
 				&nbsp;
 				&nbsp;
 				<button type='button'
-						onClick={ev => location = location}
+						onClick={ev => location = location.href}
 						disabled={disabled} >
 					Disconnect
 				</button>
@@ -59,7 +59,6 @@ class HeaderPanel extends React.Component {
 	
 	// logs in
 	initiateConnect(connectedAs) {
-		if (typeof connectedAs != 'string') debugger;////
 		this.setState({isLoggedOn: true});
 		this.props.initiateConnect(connectedAs);
 	}

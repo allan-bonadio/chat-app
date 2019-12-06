@@ -15,8 +15,8 @@ class ChatPanel extends React.Component {
 		super(props);
 		this.state = {text: ''};
 		this.handleKeystroke = this.handleKeystroke.bind(this);
-		this.handlePost = this.handlePost.bind(this);
 		this.handleChange = this.handleChange.bind(this);
+		this.handlePost = this.handlePost.bind(this);
 	}
 	
 	render() {
@@ -24,15 +24,12 @@ class ChatPanel extends React.Component {
 		if (! this.props.connectedAs)
 			return '';
 		
-		console.log('this.props.connectedAs', this.props.connectedAs);
-		console.log('this.props.history', this.props.history);
-		if (typeof this.props.connectedAs != 'string') debugger;////
 		let chatPosts = this.props.history.map((post, ix) => 
 			<ChatPost post={post} key={ix} connectedAs={this.props.connectedAs} />
 		);
 		
 		// always at least 3 lines showing, or more if it's a big msg (approx)
-		let rows = this.state.text.length / 100 + 3;
+		let rows = Math.floor(this.state.text.length / 100 + 3);
 		
 		return (
 			<main className="Chat-Panel">
@@ -52,7 +49,6 @@ class ChatPanel extends React.Component {
 				</div>
 			</main>
 		);
-	
 	}
 	
 	// keystroke in the textarea
@@ -65,15 +61,19 @@ class ChatPanel extends React.Component {
 	handleChange(ev) {
 		this.setState({text: ev.target.value});
 	}
-
+	
 	// click on the Post button (or hit return)
 	// posts a new chat message by sending to server.
 	// It'll send us the whole history once it gets around to it.
 	handlePost(ev) {
+		// no empty posts!
+		if (this.state.text.trim() == '')
+			return;
+		
 		clientConnection.sendCommandToServer({
 			what: 'post', 
 			connectedAs: this.props.connectedAs, 
-			text: this.state.text});
+			text: this.state.text.trim()});
 		
 		// clear the box, but focus it
 		this.setState({text: ''});
